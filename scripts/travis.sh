@@ -192,4 +192,41 @@ elif [ "$TRAVIS_BUILD_TYPE" = "api/python" ]; then
 		exit 1
 	fi
 	valgrind_check "$tmpdir"
+elif [ "$TRAVIS_BUILD_TYPE" = "documentation" ] \
+    && [ -n "$GH_TOKEN" ] && [ "$TRAVIS_BRANCH" = "travis-doc" ]; then
+    ## script taken from: http://philipuren.com/serendipity/index.php?/archives/21-Using-Travis-to-automatically-publish-documentation.html
+    ## the following automatically builds the doxygen
+    ## documentation and pushes it to the gh_pages branch
+
+    cd /opt
+    sudo wget http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.7.linux.bin.tar.gz
+    sudo tar -xzvf doxygen-1.8.7.linux.bin.tar.gz
+    set_environment /opt/doxygen-1.8.7
+    cd $TRAVIS_BUILD_DIR
+
+    # First, set up credentials using the environment variables
+    # GIT_NAME, GIT_EMAIL and GH_TOKEN. These were passed
+    # encrypted to travis and should have been decrypted
+    # using travis' private key before this script was run.
+    git config --global user.name "${GIT_NAME}"
+    git config --global user.email ${GIT_EMAIL}
+
+    # now we make the directory for the docs and cd into it
+    mkdir -p build/doxygen/html
+    cd build/doxygen/html/
+
+    # clone the whole repo again, but switch to gh_pages branch
+    git clone https://github.com/stefan991/documentation_test .
+    git checkout gh-pages
+
+    # go back up and build the documentation, pointing it towards
+    # that dir we just made
+    cd ../../../
+    doxygen
+
+    # cd into the docs dir and commit and push the new docs.
+    cd build/doxygen/html/
+    git add --all .
+    git commit -m "Auto-updating doxygen developer documentation"
+    git push https://${GH_TOKEN}@github.com/stefan991/documentation_test gh-pages
 fi

@@ -4,6 +4,11 @@ env:
     # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
     # via the "travis encrypt" command using the project repo's public key
     - secure: "QEz92NyItkzQu52kCFD928jEwUYnA2OIgSyeNrp+Y3gm5rOmSZerY8hGiXyNZxocap9+qIPCapRRYU3ZYKWZPeucWMLN3aIjxAFdhugKbnmNYE1jFugb6b8N3SxiX/3206NHXlYaz0OZhh6OBAFmPUXamJC8OrWVgPNPo7wv4UQ="
+    # git user for documentation push
+    - GIT_NAME="stefan991"
+    - GIT_EMAIL="stefan991@gmail.com"
+    # encryptend github token: GH_TOKEN=...
+    - secure: "VYXapwZj1fRDKl0GDLkhmv57uKUt9FcuxoQLVY0aHh1+qU42VYwhLAlbGoo5DWmuAeM9vN9dwzIKckCIT0BonYWzLvq3OXYZRNq3bhcCCPGfMPUQZXXrEUhBF4VWgVfvpNe2mvgqiM9IoHCSjz5gj1DNxn3xmIIAyC1SDxT4Ogs="
   matrix:
     - TRAVIS_BUILD_TYPE=clang/asan
     - TRAVIS_BUILD_TYPE=gcc/ia32
@@ -11,5 +16,6 @@ env:
     - TRAVIS_BUILD_TYPE=clint
     - TRAVIS_BUILD_TYPE=api/python
     - TRAVIS_BUILD_TYPE=coverity
+    - TRAVIS_BUILD_TYPE=documentation
 script:
   - ./scripts/travis.sh
